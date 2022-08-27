@@ -16,8 +16,8 @@ var stacks = [
     [] 
 ];
 
-welcome();
-
+//welcome();
+renderBoard();
 function welcome(){
     var body = document.getElementById("welcome");
     body.classList.add("welcome");
@@ -65,7 +65,9 @@ function checkInputValue(action_type){
             createDisks(disc_number_value);
             renderDisks();
         }else if(action_type == 'resolve'){
+            console.log('test');
            runAlgoMove(disc_number_value, stacks[0], stacks[2], stacks[1]);
+           renderDisks();
 
         }
 
@@ -77,19 +79,7 @@ function checkInputValue(action_type){
 function resetGame(){
     stacks = [ [], [], [] ];
 
-    var happend_point1 = document.getElementById("happend-point1");
-    var happend_point2 = document.getElementById("happend-point2");
-    var happend_point3 = document.getElementById("happend-point3");
-
-    while(happend_point1.firstChild){
-        happend_point1.removeChild(happend_point1.lastChild);
-    }
-    while(happend_point2.firstChild){
-        happend_point2.removeChild(happend_point2.lastChild);
-    }
-    while(happend_point3.firstChild){
-        happend_point3.removeChild(happend_point3.lastChild);
-    }
+    renderDisks();
 }
 
 function createDisks(disc_number){
@@ -111,6 +101,16 @@ function renderDisks(){
     var happend_point1 = document.getElementById("happend-point1");
     var happend_point2 = document.getElementById("happend-point2");
     var happend_point3 = document.getElementById("happend-point3");
+
+    while(happend_point1.firstChild){
+        happend_point1.removeChild(happend_point1.lastChild);
+    }
+    while(happend_point2.firstChild){
+        happend_point2.removeChild(happend_point2.lastChild);
+    }
+    while(happend_point3.firstChild){
+        happend_point3.removeChild(happend_point3.lastChild);
+    }
 
     for(i = 0; i < stacks[0].length; i++){
         var disk = document.createElement("div");
@@ -161,7 +161,6 @@ function runAlgoMove(n, starting_stack, ending_stack, swap_stack){
         removeDisk(n, starting_stack);
         moveDisk(n, ending_stack);
         console.log('disque 1 bouge de ' + start + ' à ' + end);
-        renderDisks
         return;
     }
 
