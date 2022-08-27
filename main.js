@@ -8,13 +8,11 @@ var solution = document.getElementById("solution");
 var disc_number_input = document.getElementById("disc_number");
 disc_number.value = null;
 
-var disks_stock = [1, 2, 3, 4, 5];
-
-var stacks = [ 
-    [], 
-    [], 
-    [] 
-];
+var stacks = {
+    'start': [],
+    'mid': [],
+    'end': [],
+}
 
 //welcome();
 renderBoard();
@@ -32,7 +30,7 @@ function welcome(){
 }
 
 function renderBoard(){
-    for(i = 1; i < stacks.length + 1 ; i++){
+    for(i = 1; i < 4 ; i++){
         var container = document.getElementById("container");
     
         var stack_container = document.createElement("div");
@@ -64,9 +62,9 @@ function checkInputValue(action_type){
         if(action_type == 'create'){
             createDisks(disc_number_value);
             renderDisks();
+            console.log(disc_number_value, stacks)
         }else if(action_type == 'resolve'){
-            console.log('test');
-           runAlgoMove(disc_number_value, stacks[0], stacks[2], stacks[1]);
+            runAlgoText(disc_number_value, 'start', 'end', 'mid');
            renderDisks();
 
         }
@@ -77,7 +75,11 @@ function checkInputValue(action_type){
 }
 
 function resetGame(){
-    stacks = [ [], [], [] ];
+    stacks = {
+        'start': [],
+        'mid': [],
+        'end': [],
+    }
 
     renderDisks();
 }
@@ -86,11 +88,9 @@ function createDisks(disc_number){
 
     resetGame();
 
-    for(i = disc_number; i > 0 ; i--){
+    for(i = 0; i < disc_number ; i++){
 
-        stacks[0].push(disks_stock[i-1]);
-
-        
+        stacks['start'].push(i + 1);
     }
 }
 
@@ -112,27 +112,27 @@ function renderDisks(){
         happend_point3.removeChild(happend_point3.lastChild);
     }
 
-    for(i = 0; i < stacks[0].length; i++){
+    for(i = 0; i < stacks['start'].length; i++){
         var disk = document.createElement("div");
         disk.classList.add("disk");
-        disk.classList.add("disk"+stacks[0][i]);
-        disk.setAttribute('id',"disk"+stacks[0][i]);
+        disk.classList.add("disk"+stacks['start'][i]);
+        disk.setAttribute('id',"disk"+stacks['start'][i]);
         happend_point1.appendChild(disk);
     }
 
-    for(i = 0; i < stacks[1].length; i++){
+    for(i = 0; i < stacks['mid'].length; i++){
         var disk = document.createElement("div");
         disk.classList.add("disk");
-        disk.classList.add("disk"+stacks[1][i]);
-        disk.setAttribute('id',"disk"+stacks[1][i]);
+        disk.classList.add("disk"+stacks['mid'][i]);
+        disk.setAttribute('id',"disk"+stacks['mid'][i]);
         happend_point2.appendChild(disk);
     }
 
-    for(i = 0; i < stacks[2].length; i++){
+    for(i = 0; i < stacks['end'].length; i++){
         var disk = document.createElement("div");
         disk.classList.add("disk");
-        disk.classList.add("disk"+stacks[2][i]);
-        disk.setAttribute('id',"disk"+stacks[2][i]);
+        disk.classList.add("disk"+stacks['end'][i]);
+        disk.setAttribute('id',"disk"+stacks['end'][i]);
         happend_point3.appendChild(disk);
     }
  
@@ -140,11 +140,11 @@ function renderDisks(){
 
 
 function moveDisk(disk_number, to){
-    to.unshift(disk_number);
+    stacks[to].unshift(disk_number);
 }
 
 function removeDisk(disk_number, from){
-    from.splice(from.findIndex(disk => disk == disk_number,1));
+    stacks[from].splice(stacks[from].findIndex(disk => disk == disk_number, 1), 1);
 }
 
 
@@ -175,7 +175,7 @@ function runAlgoMove(n, starting_stack, ending_stack, swap_stack){
 
 function runAlgoText(n, starting_stack, ending_stack, swap_stack){
  
-    if(n === 1){
+    if(n === 0){
         counter ++;
         solution.innerHTML = "nombre de mouvements minimum = " + counter;
         return;
@@ -183,6 +183,8 @@ function runAlgoText(n, starting_stack, ending_stack, swap_stack){
 
     runAlgoText(n-1, starting_stack, swap_stack, ending_stack);
     counter ++;
+    removeDisk(n, starting_stack);
+    moveDisk(n, ending_stack);
     runAlgoText(n-1, swap_stack, ending_stack, starting_stack);
     counter ++;
     
