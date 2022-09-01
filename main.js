@@ -2,7 +2,7 @@ var message = document.getElementById("message");
 message.innerHTML = "hello"
 
 var counter = 0;
-
+var animation_time = "1000";
 var solution = document.getElementById("solution");
 
 var disc_number_input = document.getElementById("disc_number");
@@ -13,6 +13,8 @@ var stacks = {
     'mid': [],
     'end': [],
 }
+
+var res_history = []
 
 //welcome();
 renderBoard();
@@ -65,7 +67,7 @@ function checkInputValue(action_type){
             console.log(disc_number_value, stacks)
         }else if(action_type == 'resolve'){
             runAlgoText(disc_number_value, 'start', 'end', 'mid');
-           renderDisks();
+           renderAnimation();
 
         }
 
@@ -138,6 +140,17 @@ function renderDisks(){
  
 }
 
+function renderAnimation(){
+    setTimeout(() => {
+        if(res_history.length == 0) {
+            return;
+        }
+        stacks = res_history[0];
+        res_history.splice(0, 1);
+        renderDisks();
+        renderAnimation();
+    }, animation_time);
+}
 
 function moveDisk(disk_number, to){
     stacks[to].unshift(disk_number);
@@ -148,35 +161,9 @@ function removeDisk(disk_number, from){
 }
 
 
-function runAlgoMove(n, starting_stack, ending_stack, swap_stack){
-
-    var start = 'départ';
-    var end = 'arrivée';
-    var vide = 'vide';
-
-    console.log(n, starting_stack, ending_stack, swap_stack)
-
-    if(n === 1){
-        counter ++;
-        removeDisk(n, starting_stack);
-        moveDisk(n, ending_stack);
-        console.log('disque 1 bouge de ' + start + ' à ' + end);
-        return;
-    }
-
-    runAlgoMove(n-1, starting_stack, swap_stack, ending_stack);
-    counter ++;
-    console.log('disque ' + (n-1) + ' bouge de ' + start + ' à ' + end);
-    runAlgoMove(n-1, swap_stack, ending_stack, starting_stack);
-    counter ++;
-    
-};
-
-
 function runAlgoText(n, starting_stack, ending_stack, swap_stack){
  
     if(n === 0){
-        counter ++;
         solution.innerHTML = "nombre de mouvements minimum = " + counter;
         return;
     }
@@ -185,7 +172,8 @@ function runAlgoText(n, starting_stack, ending_stack, swap_stack){
     counter ++;
     removeDisk(n, starting_stack);
     moveDisk(n, ending_stack);
-    runAlgoText(n-1, swap_stack, ending_stack, starting_stack);
-    counter ++;
+    // deep copy of the board state
+    res_history.push(JSON.parse(JSON.stringify(stacks)));
+    runAlgoText(n-1, swap_stack, ending_stack, starting_stack)
     
 };
