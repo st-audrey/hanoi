@@ -7,6 +7,7 @@ var solution = document.getElementById("solution");
 solution.innerHTML = ""
 
 var disc_number_input = document.getElementById("disc_number");
+var timeout = null;
 disc_number.value = null;
 
 var stacks = {
@@ -82,7 +83,11 @@ function resetGame(){
         'mid': [],
         'end': [],
     }
-
+    if(timeout) {
+        clearTimeout(timeout);
+        res_history = [];
+        timeout = null;
+    }
     renderDisks();
 }
 
@@ -139,7 +144,7 @@ function renderDisks(){
 
 function renderAnimation(){
 
-    setTimeout(() => {
+    timeout = setTimeout(() => {
         if(res_history.length == 0) {
             return;
         }
