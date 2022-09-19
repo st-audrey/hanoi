@@ -49,31 +49,32 @@ function renderBoard(){
 
 function checkInputValue(action_type){
 
-    var disc_number_value = parseInt(disc_number_input.value);
-    counter = 0;
-    message.removeAttribute("class");
 
-    if(disc_number_value > 0 && disc_number_value <= 5){
-        message.classList.add("txt-green");
+    if(action_type == 'create'){
+        var disc_number_value = parseInt(disc_number_input.value);
+        counter = 0;
+        message.removeAttribute("class");
+        
+        if(disc_number_value > 0 && disc_number_value <= 5){
+            message.classList.add("txt-green");
+            if(disc_number_value == 1){
+                message.innerHTML = "Vous avez choisi 1 disque";
+            }else{
+                message.innerHTML = "Vous avez choisi " + disc_number_value + " disques";
+            }
 
-        if(disc_number_value == 1){
-            message.innerHTML = "Vous avez choisi 1 disque";
-        }else{
-            message.innerHTML = "Vous avez choisi " + disc_number_value + " disques";
-        }
-
-        if(action_type == 'create'){
             createDisks(disc_number_value);
             renderDisks();
             console.log(disc_number_value, stacks)
-        }else if(action_type == 'resolve'){
-            runAlgo(disc_number_value, 'start', 'end', 'mid');
-            renderAnimation();
         }
-
-    }else{
-        message.innerHTML = "Merci de renseigner un chiffre entre 1 et 5";
-        message.classList.add("txt-red");
+        else{
+            message.innerHTML = "Merci de renseigner un chiffre entre 1 et 5";
+            message.classList.add("txt-red");
+        }
+    }
+    else if(action_type == 'resolve'){
+        runAlgo(stacks['start'].length, 'start', 'end', 'mid');
+        renderAnimation();
     }
 }
 
