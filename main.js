@@ -3,12 +3,17 @@ message.innerHTML = ""
 
 var counter = 0;
 var animation_time = "1000";
-var solution = document.getElementById("solution");
-solution.innerHTML = ""
+
+var reset_btn = document.getElementById("reset");
+reset_btn.innerHTML = "Reset";
 
 var disc_number_input = document.getElementById("disc_number");
 var timeout = null;
+
 disc_number.value = null;
+
+// var solution = document.getElementById("solution");
+// solution.innerHTML = ""
 
 var stacks = {
     'start': [],
@@ -20,16 +25,6 @@ var res_history = []
 
 renderBoard();
 
-// welcome();
-
-// function welcome(){
-
-//     setTimeout(() => {
-//         var main = document.getElementById("main");
-//         main.classList.add("main");
-//         renderBoard();
-//       }, "2000")
-// }
 
 function renderBoard(){
     for(i = 1; i < 4 ; i++){
@@ -49,7 +44,6 @@ function renderBoard(){
 
 function checkInputValue(action_type){
 
-
     if(action_type == 'create'){
         var disc_number_value = parseInt(disc_number_input.value);
         counter = 0;
@@ -65,7 +59,6 @@ function checkInputValue(action_type){
 
             createDisks(disc_number_value);
             renderDisks();
-            console.log(disc_number_value, stacks)
         }
         else{
             message.innerHTML = "Merci de renseigner un chiffre entre 1 et 5";
@@ -73,6 +66,7 @@ function checkInputValue(action_type){
         }
     }
     else if(action_type == 'resolve'){
+        reset_btn.innerHTML = "Stop";
         runAlgo(stacks['start'].length, 'start', 'end', 'mid');
         renderAnimation();
     }
@@ -147,6 +141,7 @@ function renderAnimation(){
 
     timeout = setTimeout(() => {
         if(res_history.length == 0) {
+            reset_btn.innerHTML = "Reset";
             return;
         }
         stacks = res_history[0];
@@ -169,7 +164,7 @@ function removeDisk(disk_number, from){
 function runAlgo(n, starting_stack, ending_stack, swap_stack){
  
     if(n === 0){
-        solution.innerHTML = "nombre de mouvements minimum = " + counter;
+        //solution.innerHTML = "nombre de mouvements minimum = " + counter;
         return;
     }
 
